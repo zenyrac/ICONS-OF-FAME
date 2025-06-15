@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phoenix Rising: Legends of Resilience</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0a0a08;
+            --secondary: #1a1710;
+            --accent: #a67c52;
+            --accent-light: #d4b483;
+            --text: #e8e0c9;
+            --error: #c53d3d;
+            --success: #4a7c59;
+            --gold: #d4af37;
+            --bronze: #cd7f32;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
+        }
+
+        body {
+            background-color: var(--primary);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            background-image: url('https://www.transparenttextures.com/patterns/papyrus.png');
+        }
+
+        /* Passcode Screen */
+        .passcode-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(10, 10, 8, 0.97), rgba(0, 0, 0, 0.9)), 
+                        url('https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=2070') center/cover;
+            backdrop-filter: blur(5px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            transition: all 0.5s ease;
+            text-align: center;
+        }
+
+        .passcode-container {
+            background-color: var(--secondary);
+            padding: 2.5rem;
+            border-radius: 8px;
+            border: 1px solid var(--accent);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8);
+            max-width: 600px;
+            width: 90%;
+            transform: translateY(-20px);
+            opacity: 0;
+            animation: fadeInUp 0.5s 0.3s forwards;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .passcode-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #a67c52, #d4b483, #a67c52);
+        }
+
+        @keyframes fadeInUp {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .passcode-title {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+            color: var(--accent-light);
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            letter-spacing: 2px;
+            background: linear-gradient(to right, #d4b483, #a67c52);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .passcode-subtitle {
+            margin-bottom: 2rem;
+            font-size: 1.2rem;
+            opacity: 0.85;
+            font-style: italic;
+            line-height: 1.6;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .passcode-input-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 1.5rem 0;
+        }
+
+        .passcode-input {
+            width: 80%;
+            padding: 12px 20px;
+            background: rgba(26, 23, 16, 0.8);
+            border: 1px solid var(--accent);
+            border-radius: 30px;
+            color: var(--text);
+            font-size: 1.1rem;
+            text-align: center;
+            letter-spacing: 3px;
+            margin-bottom: 1.5rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .passcode-input:focus {
+            border-color: var(--accent-light);
+            box-shadow: 0 0 15px rgba(166, 124, 82, 0.5);
+        }
+
+        .passcode-submit {
+            background: linear-gradient(to bottom, #a67c52, #7d5c3a);
+            border: none;
+            color: var(--text);
+            padding: 12px 40px;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .passcode-submit:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(166, 124, 82, 0.4);
+            background: linear-gradient(to bottom, #c59a6a, #9e744d);
+        }
+
+        .category-grid {
+            display: none;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 1.5rem;
+        }
+
+        .category-btn {
+            background: linear-gradient(to bottom, var(--secondary), var(--primary));
+            border: 1px solid var(--accent);
+            color: var(--accent-light);
+            padding: 15px 10px;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100px;
+        }
+
+        .category-btn i {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: var(--accent);
+        }
+
+        .category-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(166, 124, 82, 0.4);
+            background: linear-gradient(to bottom, #2a261d, #1a1710);
+            border-color: var(--accent-light);
+        }
+
+        .category-btn.active {
+            background: linear-gradient(to bottom, #a67c52, #7d5c3a);
+            border-color: var(--accent-light);
+            color: var(--text);
+        }
+
+        .error-message {
+            color: var(--error);
+            margin-top: 1.5rem;
+            height: 25px;
+            font-size: 1rem;
+            font-style: italic;
+        }
+
+        /* Main Content */
+        .main-content {
+            display: none;
+            min-height: 100vh;
+            width: 100%;
+            position: relative;
+            padding: 3rem 1rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .main-title {
+            font-size: 3rem;
+            color: var(--accent-light);
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            letter-spacing: 2px;
+            background: linear-gradient(to right, #d4b483, #a67c52);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .category-nav {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 2rem 0;
+        }
+
+        .nav-btn {
+            background: rgba(26, 23, 16, 0.7);
+            border: 1px solid var(--accent);
+            color: var(--accent-light);
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .nav-btn:hover, .nav-btn.active {
+            background: linear-gradient(to right, #a67c52, #7d5c3a);
+            border-color: var(--accent-light);
+            color: var(--text);
+        }
+
+        .legends-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .legend-card {
+            background-color: rgba(26, 23, 16, 0.7);
+            border: 1px solid var(--accent);
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+            overflow: hidden;
+            position: relative;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            cursor: pointer;
+        }
+
+        .legend-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(166, 124, 82, 0.5);
+        }
+
+        .card-header {
+            position: relative;
+            height: 550px;
+            overflow: hidden;
+        }
+
+        .card-header img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .legend-card:hover .card-header img {
+            transform: scale(1.05);
+        }
+
+        .category-tag {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--accent);
+            color: var(--text);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .card-content {
+            padding: 25px;
+        }
+
+        .legend-name {
+            font-size: 1.8rem;
+            color: var(--accent-light);
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--accent);
+            padding-bottom: 10px;
+        }
+
+        .legend-quote {
+            font-style: italic;
+            color: var(--accent);
+            margin: 15px 0;
+            padding-left: 15px;
+            border-left: 3px solid var(--accent);
+        }
+
+        .legend-story {
+            line-height: 1.8;
+            margin-bottom: 20px;
+            max-height: 200px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .legend-story::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .legend-story::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 3px;
+        }
+
+        .key-lesson {
+            background: rgba(166, 124, 82, 0.15);
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 15px;
+            border-left: 3px solid var(--accent-light);
+        }
+
+        .key-lesson h3 {
+            color: var(--accent-light);
+            margin-bottom: 8px;
+        }
+
+        .phoenix-symbol {
+            text-align: center;
+            font-size: 3rem;
+            margin-top: 20px;
+            color: var(--accent);
+            animation: pulse 3s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.1); }
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(166, 124, 82, 0.3);
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+
+        /* Detailed View Modal - Updated Layout */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 10, 8, 0.95);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+            backdrop-filter: blur(8px);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-container {
+            background: var(--secondary);
+            width: 90%;
+            max-width: 1000px;
+            max-height: 90vh;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+            border: 1px solid var(--accent);
+            transform: translateY(30px);
+            transition: transform 0.5s ease;
+            display: flex;
+            flex-direction: row;
+        }
+
+        .modal-overlay.active .modal-container {
+            transform: translateY(0);
+        }
+
+        .modal-image-container {
+            flex: 1;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            border-right: 2px solid var(--accent);
+        }
+
+        .modal-image-container img {
+            width: 100%;
+            height: 100%;
+            max-height: 85vh;
+            object-fit: contain;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .modal-header {
+            position: relative;
+            padding: 20px 30px;
+            background: rgba(26, 23, 16, 0.9);
+            border-bottom: 1px solid var(--accent);
+        }
+
+        .modal-category-tag {
+            background: var(--accent);
+            color: var(--text);
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+        .modal-content {
+            padding: 30px;
+            overflow-y: auto;
+            max-height: calc(90vh - 150px);
+        }
+
+        .modal-legend-name {
+            font-size: 2.5rem;
+            color: var(--accent-light);
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--accent);
+        }
+
+        .modal-legend-quote {
+            font-style: italic;
+            font-size: 1.4rem;
+            color: var(--accent);
+            margin: 25px 0;
+            padding-left: 25px;
+            border-left: 4px solid var(--accent);
+            line-height: 1.6;
+        }
+
+        .modal-legend-story {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 30px;
+        }
+
+        .modal-key-lesson {
+            background: rgba(166, 124, 82, 0.2);
+            padding: 25px;
+            border-radius: 8px;
+            margin-top: 25px;
+            border-left: 4px solid var(--accent-light);
+        }
+
+        .modal-key-lesson h3 {
+            font-size: 1.5rem;
+            color: var(--accent-light);
+            margin-bottom: 15px;
+        }
+
+        .modal-key-lesson p {
+            font-size: 1.2rem;
+            line-height: 1.7;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            background: rgba(166, 124, 82, 0.8);
+            color: var(--text);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.3s;
+        }
+
+        .close-modal:hover {
+            background: var(--error);
+            transform: rotate(90deg);
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--secondary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-light);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .fade-in {
+            animation: fadeIn 1s ease forwards;
+        }
+
+        .slide-up {
+            animation: slideUp 0.8s ease forwards;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 992px) {
+            .legends-container {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            }
+            
+            .modal-container {
+                flex-direction: column;
+                max-height: 95vh;
+            }
+            
+            .modal-image-container {
+                border-right: none;
+                border-bottom: 2px solid var(--accent);
+                max-height: 50vh;
+                padding: 15px;
+            }
+            
+            .modal-content-container {
+                max-height: 45vh;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .passcode-container {
+                padding: 1.8rem;
+            }
+            
+            .passcode-title {
+                font-size: 2.2rem;
+            }
+            
+            .passcode-input {
+                width: 90%;
+            }
+            
+            .category-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .main-title {
+                font-size: 2.5rem;
+            }
+            
+            .legends-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .modal-container {
+                width: 95%;
+            }
+            
+            .modal-legend-name {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .passcode-container {
+                padding: 1.5rem;
+            }
+            
+            .passcode-title {
+                font-size: 1.8rem;
+            }
+            
+            .passcode-input {
+                font-size: 1rem;
+                padding: 10px;
+            }
+            
+            .passcode-submit {
+                padding: 10px 30px;
+            }
+            
+            .category-btn {
+                min-height: 80px;
+                padding: 10px;
+                font-size: 0.9rem;
+            }
+            
+            .main-title {
+                font-size: 2rem;
+            }
+            
+            .nav-btn {
+                padding: 8px 15px;
+                font-size: 0.9rem;
+            }
+            
+            .modal-legend-name {
+                font-size: 1.8rem;
+            }
+            
+            .modal-legend-quote {
+                font-size: 1.2rem;
+            }
+            
+            .modal-header {
+                padding: 15px;
+            }
+            
+            .modal-content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Passcode Screen -->
+    <div class="passcode-screen">
+        <div class="passcode-container">
+            <h1 class="passcode-title">Phoenix Rising</h1>
+            <p class="passcode-subtitle">"Legends are not born, they are forged in the fires of adversity. Enter the sacred code to unlock their stories."</p>
+            
+            <div class="passcode-input-container">
+                <input type="password" class="passcode-input" id="passcodeInput" placeholder="Enter the sacred code...">
+                <button class="passcode-submit" id="submitPasscode">Unlock Wisdom</button>
+            </div>
+            
+            <div class="category-grid">
+                <div class="category-btn" data-category="sports">
+                    <i class="fa-solid fa-futbol"></i>
+                    Sports Legends
+                </div>
+                <div class="category-btn" data-category="entertainment">
+                    <i class="fas fa-film"></i>
+                    Entertainment Icons
+                </div>
+                <div class="category-btn" data-category="science">
+                    <i class="fas fa-atom"></i>
+                    Science Pioneers
+                </div>
+                <div class="category-btn" data-category="activism">
+                    <i class="fas fa-fist-raised"></i>
+                    Social Activists
+                </div>
+                <div class="category-btn" data-category="business">
+                    <i class="fas fa-chart-line"></i>
+                    Business Titans
+                </div>
+                <div class="category-btn" data-category="authors">
+                    <i class="fas fa-book-open"></i>
+                    Literary Voices
+                </div>
+            </div>
+            
+            <div class="error-message" id="passcodeError"></div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="header">
+            <h1 class="main-title">Legends of Resilience</h1>
+            <p class="subtitle">"The phoenix must burn to emerge. These souls transformed their deepest struggles into legendary triumphs."</p>
+            
+            <div class="category-nav">
+                <div class="nav-btn" data-category="all">All Legends</div>
+                <div class="nav-btn" data-category="sports">Sports</div>
+                <div class="nav-btn" data-category="entertainment">Entertainment</div>
+                <div class="nav-btn" data-category="science">Science</div>
+                <div class="nav-btn" data-category="activism">Activism</div>
+                <div class="nav-btn" data-category="business">Business</div>
+                <div class="nav-btn" data-category="authors">Authors</div>
+            </div>
+        </div>
+        
+        <div class="legends-container" id="legendsContainer">
+            <!-- Legend cards will be dynamically inserted here -->
+        </div>
+        
+        <div class="footer">
+            <p>The Wisdom of the Ancients • Passed Down Through Generations</p>
+            <div class="phoenix-symbol">𓅂</div>
+        </div>
+    </div>
+    
+    <!-- Detailed View Modal -->
+    <div class="modal-overlay" id="legendModal">
+        <div class="modal-container">
+            <div class="close-modal" id="closeModal">
+                <i class="fas fa-times"></i>
+            </div>
+            <div class="modal-image-container">
+                <img id="modalImage" src="" alt="Legend">
+            </div>
+            <div class="modal-content-container">
+                <div class="modal-header">
+                    <div class="modal-category-tag" id="modalCategory"></div>
+                    <h2 class="modal-legend-name" id="modalName"></h2>
+                </div>
+                <div class="modal-content">
+                    <div class="modal-legend-quote" id="modalQuote"></div>
+                    <div class="modal-legend-story" id="modalStory"></div>
+                    <div class="modal-key-lesson">
+                        <h3>Key Lesson</h3>
+                        <p id="modalLesson"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Legend data with all 16 celebrities
+        const legends = [
+            {
+                name: "Lewis Hamilton",
+                category: "sports",
+                image: "https://upload.wikimedia.org/wikipedia/commons/1/18/Lewis_Hamilton_2016_Malaysia_2.jpg",
+                quote: "Success isn't just about winning—it's about pulling others up with you.",
+                story: "Lewis Carl Davidson Hamilton was born in 1985 in Stevenage, UK. His father worked multiple jobs to fund his karting career. Facing racial prejudice as the only Black child at races, he endured slurs but persisted. At 13, he was signed to McLaren's program but struggled for sponsorship due to racism. His father remortgaged their home to keep his career alive. In 2007, he became F1's first Black driver. He won his first World Championship in 2008 with a dramatic last-lap overtake. With seven World Championships, he's the most successful driver in F1 history. Beyond racing, he founded Mission 44 to support underrepresented youth.",
+                lesson: "The world will try to define you. Race, background, doubters—none matter if you refuse to be stopped."
+            },
+            {
+                name: "Cristiano Ronaldo",
+                category: "sports",
+                image: "https://upload.wikimedia.org/wikipedia/commons/8/8c/Cristiano_Ronaldo_2018.jpg",
+                quote: "Talent without work is nothing.",
+                story: "Born in 1985 in Funchal, Madeira, Cristiano Ronaldo grew up in extreme poverty. His father battled alcoholism, and the family lived in a tin-roofed shack. His mother considered abortion due to their circumstances. At 12, he moved alone to Lisbon for training, where he was mocked for his accent and thin frame. At 15, he underwent heart surgery for tachycardia. Joining Manchester United in 2003, he transformed from a showy teen to a disciplined athlete. With five Ballon d'Or awards, he's considered one of football's greatest. Despite his wealth, he donates millions to hospitals and remains eligible for blood donation by avoiding tattoos.",
+                lesson: "Discipline is the bridge between dreams and reality."
+            },
+            {
+                name: "Michael Jackson",
+                category: "entertainment",
+                image: "https://jacksondynasty.files.wordpress.com/2019/12/img_4459.jpg",
+                quote: "Great art comes from great pain.",
+                story: "Michael Jackson was born in 1985 in Gary, Indiana. As the seventh of ten children, he endured physical abuse from his father while performing with the Jackson 5. His solo career began with 'Off the Wall' in 1979, but radio stations called it 'too Black for pop.' In 1982, he released 'Thriller,' which faced resistance from MTV until CBS threatened to pull all artists. His 1983 Moonwalk performance rewrote entertainment history. Despite his success, he battled vitiligo, media cruelty ('Wacko Jacko'), and painkiller addiction. Though he died $500M in debt, he had secretly donated over $500M to charity.",
+                lesson: "The brighter the light, the darker the shadow."
+            },
+            {
+                name: "Nikola Tesla",
+                category: "science",
+                image: "https://upload.wikimedia.org/wikipedia/commons/7/79/Tesla_circa_1890.jpeg",
+                quote: "Sacrifice today for tomorrow's progress.",
+                story: "Nikola Tesla was born in 1856 in Smiljan, Croatia. A child prodigy, he visualized inventions in his mind. In 1882, he discovered the rotating magnetic field—the foundation of AC power. Arriving in New York in 1884 with four cents, he worked for Edison who promised $50K for improved DC motors but called it a 'joke.' Tesla quit and dug ditches before finding backers for AC power. His innovations enabled modern power grids. He dreamed of free global wireless power with Wardenclyffe Tower, but funding was pulled and his lab destroyed. Tesla died alone in 1943, penniless, with the FBI seizing his papers. Today, the unit 'tesla' honors his legacy.",
+                lesson: "The future belongs to those who believe in beauty before the world sees it."
+            },
+            {
+                name: "Nelson Mandela",
+                category: "activism",
+                image: "https://upload.wikimedia.org/wikipedia/commons/0/02/Nelson_Mandela_1994.jpg",
+                quote: "Forgiveness liberates the soul.",
+                story: "Born in 1918 in South Africa, Nelson Mandela became a lawyer and anti-apartheid revolutionary. Arrested in 1962, he spent 27 years in prison, 18 of them on Robben Island breaking rocks in lime quarries. He taught himself law in prison and secretly wrote memoirs on toilet paper. Released in 1990, he negotiated an end to apartheid and won the presidency in 1994, becoming South Africa's first Black president. He formed the Truth and Reconciliation Commission to heal national wounds and invited his jailers to his inauguration. Mandela won the Nobel Peace Prize in 1993 and remains a global symbol of reconciliation.",
+                lesson: "Forgiveness is not an occasional act; it is a permanent attitude."
+            },
+            {
+                name: "Oskar Schindler",
+                category: "activism",
+                image: "https://img.radio.cz/R_4DoJ6XqATxbY3Q8bklb16rzHU=/fit-in/1800x1800/1209376658__pictures/ctk0804/schindler_oscar.jpg",
+                quote: "It's never too late to do good.",
+                story: "Oskar Schindler was born in 1908 in Austria-Hungary. A member of the Nazi Party, he initially exploited Jewish labor for profit in his enamelware factory in Kraków. Witnessing the liquidation of the Kraków Ghetto in 1942 transformed him. He spent his entire fortune bribing Nazi officials to protect his workers, creating 'Schindler's List' of 1,200 Jews essential to the war effort. He moved his factory to Czechoslovakia to save them from extermination camps. After the war, Schindler was penniless and relied on support from Jewish organizations. He died in 1974 and was honored as 'Righteous Among Nations' at Yad Vashem.",
+                lesson: "One person can make a difference, even in the darkest times."
+            },
+            {
+                name: "Stephen Hawking",
+                category: "science",
+                image: "https://upload.wikimedia.org/wikipedia/commons/e/eb/Stephen_Hawking.StarChild.jpg",
+                quote: "However difficult life may seem, there is always something you can do and succeed at.",
+                story: "Stephen Hawking was born in 1942 in Oxford, England. At 21, while studying at Cambridge, he was diagnosed with ALS and given two years to live. Defying expectations, he lived 55 more years with the disease. As his body deteriorated, he communicated through a speech synthesizer. Despite being almost completely paralyzed, he revolutionized cosmology with theories on black holes and the origin of the universe. His book 'A Brief History of Time' sold over 25 million copies. He became a cultural icon, appearing on shows like The Simpsons and Star Trek. Hawking continued researching until his death in 2018.",
+                lesson: "Intelligence is the ability to adapt to change."
+            },
+            {
+                name: "J.K. Rowling",
+                category: "authors",
+                image: "https://stories.jkrowling.com/wp-content/uploads/2021/09/Shot-B-105_V2_CROP-e1630873059779.jpg",
+                quote: "Rock bottom became the foundation I rebuilt my life on.",
+                story: "J.K. Rowling was born in 1965 in England. After her mother's death and a failed marriage, she found herself a single mother living on welfare in Edinburgh. Suffering from depression, she wrote Harry Potter in cafes while her baby slept. The manuscript was rejected by 12 publishers before Bloomsbury accepted it with a £1,500 advance. The Harry Potter series became a global phenomenon, selling over 500 million copies. Rowling became the first billionaire author but lost this status due to extensive charitable donations. She established Lumos to help institutionalized children worldwide.",
+                lesson: "Failure is so important. We speak about success all the time, but failure is the key to success."
+            },
+            {
+                name: "Viktor Frankl",
+                category: "authors",
+                image: "https://10layn.com/wp-content/uploads/2024/05/Viktor-Frankl.jpeg",
+                quote: "When we are no longer able to change a situation, we are challenged to change ourselves.",
+                story: "Viktor Frankl was born in 1905 in Vienna. A psychiatrist and neurologist, he founded logotherapy. In 1942, he and his family were sent to Nazi concentration camps. Frankl survived Auschwitz, Dachau, and Theresienstadt, but his pregnant wife, parents, and brother perished. While imprisoned, he developed his psychological theories and wrote 'Man's Search for Meaning' on scraps of paper. Published in 1946, the book has sold over 16 million copies. Frankl argued that finding meaning in suffering is essential to human survival. He continued his work until his death in 1997 at age 92.",
+                lesson: "Everything can be taken from a man but one thing: the last of the human freedoms—to choose one's attitude."
+            },
+            {
+                name: "Lionel Messi",
+                category: "sports",
+                image: "https://wallpaperaccess.com/full/3961019.jpg",
+                quote: "You have to fight to reach your dream. You have to sacrifice and work hard for it.",
+                story: "Born in Rosario, Argentina in 1987, Lionel Messi was diagnosed with growth hormone deficiency at age 11. His family couldn't afford the $900/month treatment. FC Barcelona offered to pay his medical bills if he moved to Spain, separating him from his family at 13. Despite severe homesickness and bullying for his small stature, he persevered. Messi became Barcelona's youngest player at 16, facing intense pressure. He transformed into football's greatest, winning 7 Ballon d'Or awards. After 17 seasons, he left due to financial constraints but led Argentina to World Cup glory in 2022. His foundation helps children access healthcare and education.",
+                lesson: "Physical limitations are no barrier to greatness when fueled by passion and perseverance."
+            },
+            {
+                name: "Dwayne Johnson",
+                category: "entertainment",
+                image: "https://upload.wikimedia.org/wikipedia/commons/f/f1/Dwayne_Johnson_2%2C_2013.jpg",
+                quote: "Success isn't always about greatness. It's about consistency.",
+                story: "Born in 1972, Dwayne Johnson grew up in poverty, living in studio apartments and facing evictions. His father's wrestling career kept the family moving constantly. At 14, he witnessed his mother's suicide attempt. Failed football dreams left him with $7 in his pocket. Homeless and depressed, he contemplated following his father into wrestling but was rejected by WWE. He trained relentlessly, adopting 'The Rock' persona. After wrestling stardom, Hollywood dismissed him as 'just a wrestler.' His first leading role in 'The Scorpion King' (2002) launched his film career. Now Hollywood's highest-paid actor, he openly discusses depression and runs a foundation helping at-risk children.",
+                lesson: "Your past doesn't define your future - turn setbacks into comebacks."
+            },
+            {
+                name: "BTS",
+                category: "entertainment",
+                image: "https://wallpapers.com/images/hd/photograph-for-the-bts-phone-screen-hc7jemnpz2ke4m3z.jpg",
+                quote: "Speak yourself. No matter who you are, where you're from, your skin color, your gender identity - just speak yourself.",
+                story: "Formed in 2013 by small Korean agency Big Hit Entertainment, BTS faced industry skepticism. They lived together in a cramped one-room apartment, sharing clothes and food. Early performances drew crowds of just 50 people. Criticized for addressing mental health and social issues in their music, they were excluded from major Korean awards. Their breakthrough came with 2016's 'Wings' album. Despite language barriers, they became the first Korean act to top US charts. They've addressed the UN three times, launched anti-violence campaigns, and donated millions. From underground rappers to global icons, they've sold over 30 million albums worldwide.",
+                lesson: "Authenticity transcends language barriers and cultural differences."
+            },
+            {
+                name: "Barack Obama",
+                category: "activism",
+                image: "https://upload.wikimedia.org/wikipedia/commons/8/8d/President_Barack_Obama.jpg",
+                quote: "The best way to not feel hopeless is to get up and do something.",
+                story: "Born in 1961 to a Kenyan father and American mother, Obama was abandoned by his father at age two. He grew up in Hawaii and Indonesia, struggling with racial identity. Bullied for his name and mixed heritage, he turned to drugs in high school. After Columbia University, he worked as a community organizer in Chicago's poverty-stricken South Side, earning just $13,000/year. At Harvard Law School, he became the first Black president of the Harvard Law Review. After losing a congressional race, he won a Senate seat in 2004. Against all odds, he became the first Black U.S. president in 2008, passing healthcare reform and normalizing diplomatic relations with Cuba.",
+                lesson: "Progress comes from embracing our differences and finding common ground."
+            },
+            {
+                name: "Selena Gomez",
+                category: "entertainment",
+                image: "https://upload.wikimedia.org/wikipedia/commons/8/85/Selena_Gomez_-_Walmart_Soundcheck_Concert.jpg",
+                quote: "You are enough. You are so enough. It is unbelievable how enough you are.",
+                story: "Born in 1992 to a teenage mother in Texas, Selena Gomez grew up in poverty. She began acting at 7 to help support her family. Diagnosed with lupus at 21, she underwent chemotherapy and a kidney transplant from her best friend. During recovery, she suffered psychosis and was diagnosed with bipolar disorder. After rehab, she launched Rare Beauty in 2020 to challenge beauty standards, donating $100M to mental health initiatives. She created the Emmy-winning 'Selena + Chef' during lockdowns to help fans cook affordably. Despite industry pressures, she continues making music about mental health struggles, becoming Spotify's most-streamed female artist.",
+                lesson: "Vulnerability is strength - sharing your struggles empowers others."
+            },
+            {
+                name: "Elon Musk",
+                category: "business",
+                image: "https://upload.wikimedia.org/wikipedia/commons/8/85/Elon_Musk_Royal_Society_%28crop1%29.jpg",
+                quote: "When something is important enough, you do it even if the odds are not in your favor.",
+                story: "Born in 1971 in Pretoria, South Africa, Elon Musk endured a difficult childhood marked by bullying and an estranged relationship with his father. At 17, he moved to Canada with just $2,000, working odd jobs from farm labor to cleaning boilers. He earned two bachelor's degrees at UPenn while living in a cheap office space he converted into a dorm. His first company Zip2 was built while sleeping on the office couch and showering at the YMCA. After selling Zip2 for $307M, he invested everything into X.com (later PayPal). When ousted as CEO, he poured his $180M payout into SpaceX and Tesla. In 2008, both companies nearly collapsed simultaneously - Tesla faced production hell while SpaceX had three failed launches. He worked 100-hour weeks and faced public ridicule. Today, SpaceX revolutionized space travel while Tesla accelerated the EV revolution. Musk now leads six companies simultaneously while battling severe anxiety and insomnia.",
+                lesson: "Risk everything for what matters - persistence in the face of existential failure breeds extraordinary innovation."
+            },
+            {
+                name: "Jeff Bezos",
+                category: "business",
+                image: "https://manofmany.com/wp-content/uploads/2021/04/jeff-bezos.jpg",
+                quote: "What we need to do is always lean into the future.",
+                story: "Born to a 17-year-old mother in 1964, Jeff Bezos worked on his grandparents' Texas ranch as a child. He showed early engineering genius, rigging an electric alarm to keep siblings out of his room. After Princeton, he turned down lucrative Wall Street offers to build a hedge fund from scratch. At 30, he quit his VP position to start Amazon from his Seattle garage. For the first year, he personally drove books to the post office. Wall Street analysts mocked Amazon as 'Amazon.bomb' during the dot-com crash when it lost 90% of its value. Bezos mortgaged his house to pay employees during the crisis. He pioneered cloud computing (AWS) against internal resistance, now its most profitable division. After stepping down as CEO, he focuses on Blue Origin - his space venture that suffered multiple failed landings before success. Despite becoming the world's richest man, he maintains a frugal management style learned from his ranch upbringing.",
+                lesson: "Embrace the inevitable - future-focused innovation requires weathering brutal short-term criticism."
+            }
+        ];
+
+        // DOM Elements
+        const passcodeScreen = document.querySelector('.passcode-screen');
+        const passcodeInput = document.getElementById('passcodeInput');
+        const submitPasscode = document.getElementById('submitPasscode');
+        const passcodeError = document.getElementById('passcodeError');
+        const categoryGrid = document.querySelector('.category-grid');
+        const categoryBtns = document.querySelectorAll('.category-btn');
+        const navBtns = document.querySelectorAll('.nav-btn');
+        const mainContent = document.querySelector('.main-content');
+        const legendsContainer = document.getElementById('legendsContainer');
+        const legendModal = document.getElementById('legendModal');
+        const closeModal = document.getElementById('closeModal');
+        const modalImage = document.getElementById('modalImage');
+        const modalName = document.getElementById('modalName');
+        const modalQuote = document.getElementById('modalQuote');
+        const modalStory = document.getElementById('modalStory');
+        const modalLesson = document.getElementById('modalLesson');
+        const modalCategory = document.getElementById('modalCategory');
+
+        // Passcode submission
+        submitPasscode.addEventListener('click', function() {
+            if (passcodeInput.value === '1947') {
+                passcodeError.textContent = '';
+                passcodeInput.value = '';
+                categoryGrid.style.display = 'grid';
+                document.querySelector('.passcode-input-container').style.display = 'none';
+            } else {
+                passcodeError.textContent = 'Incorrect passcode. Try again';
+                passcodeInput.classList.add('shake');
+                setTimeout(() => {
+                    passcodeInput.classList.remove('shake');
+                }, 500);
+            }
+        });
+
+        // Allow Enter key to submit passcode
+        passcodeInput.addEventListener('keyup', function(e) {
+            if (e.key === 'Enter') {
+                submitPasscode.click();
+            }
+        });
+
+        // Category Selection
+        categoryBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Remove active class from all buttons
+                categoryBtns.forEach(b => b.classList.remove('active'));
+                
+                // Add active class to clicked button
+                this.classList.add('active');
+                
+                // Get selected category
+                const selectedCategory = this.dataset.category;
+                
+                // Hide passcode screen and show main content
+                passcodeScreen.style.opacity = '0';
+                passcodeScreen.style.pointerEvents = 'none';
+                
+                setTimeout(() => {
+                    passcodeScreen.style.display = 'none';
+                    mainContent.style.display = 'block';
+                    document.body.style.backgroundImage = 'url("https://www.transparenttextures.com/patterns/old-paper.png")';
+                    
+                    // Filter and display legends
+                    filterLegends(selectedCategory);
+                    
+                    // Set active nav button
+                    navBtns.forEach(btn => {
+                        btn.classList.remove('active');
+                        if(btn.dataset.category === selectedCategory) {
+                            btn.classList.add('active');
+                        }
+                    });
+                }, 500);
+            });
+        });
+
+        // Navigation Buttons
+        navBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Remove active class from all buttons
+                navBtns.forEach(b => b.classList.remove('active'));
+                
+                // Add active class to clicked button
+                this.classList.add('active');
+                
+                // Get selected category
+                const selectedCategory = this.dataset.category;
+                
+                // Filter legends
+                filterLegends(selectedCategory);
+            });
+        });
+
+        // Filter legends by category
+        function filterLegends(category) {
+            legendsContainer.innerHTML = '';
+            
+            const filteredLegends = category === 'all' 
+                ? legends 
+                : legends.filter(legend => legend.category === category);
+            
+            filteredLegends.forEach(legend => {
+                const card = createLegendCard(legend);
+                legendsContainer.appendChild(card);
+                
+                // Add click event to open detailed view
+                card.addEventListener('click', () => {
+                    openLegendModal(legend);
+                });
+            });
+        }
+
+        // Create legend card
+        function createLegendCard(legend) {
+            const card = document.createElement('div');
+            card.className = 'legend-card slide-up';
+            
+            // Convert category to display name
+            const categoryNames = {
+                sports: 'Sports',
+                entertainment: 'Entertainment',
+                science: 'Science/Tech',
+                activism: 'Social Activism',
+                business: 'Business',
+                authors: 'Authors'
+            };
+            
+            card.innerHTML = `
+                <div class="card-header">
+                    <img src="${legend.image}" alt="${legend.name}">
+                    <div class="category-tag">${categoryNames[legend.category]}</div>
+                </div>
+                <div class="card-content">
+                    <h2 class="legend-name">${legend.name}</h2>
+                    <div class="legend-quote">"${legend.quote}"</div>
+                    <div class="legend-story">${legend.story}</div>
+                    <div class="key-lesson">
+                        <h3>Key Lesson</h3>
+                        <p>${legend.lesson}</p>
+                    </div>
+                </div>
+            `;
+            
+            return card;
+        }
+
+        // Open detailed modal for a legend
+        function openLegendModal(legend) {
+            // Convert category to display name
+            const categoryNames = {
+                sports: 'Sports',
+                entertainment: 'Entertainment',
+                science: 'Science/Tech',
+                activism: 'Social Activism',
+                business: 'Business',
+                authors: 'Authors'
+            };
+            
+            modalImage.src = legend.image;
+            modalImage.alt = legend.name;
+            modalName.textContent = legend.name;
+            modalQuote.textContent = `"${legend.quote}"`;
+            modalStory.textContent = legend.story;
+            modalLesson.textContent = legend.lesson;
+            modalCategory.textContent = categoryNames[legend.category];
+            
+            legendModal.classList.add('active');
+        }
+
+        // Close modal
+        closeModal.addEventListener('click', () => {
+            legendModal.classList.remove('active');
+        });
+
+        // Close modal if clicked outside content
+        legendModal.addEventListener('click', (e) => {
+            if (e.target === legendModal) {
+                legendModal.classList.remove('active');
+            }
+        });
+
+        // Initialize with all legends when page loads
+        window.addEventListener('DOMContentLoaded', () => {
+            // Add shake animation to CSS
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes shake {
+                    0%, 100% { transform: translateX(0); }
+                    20% { transform: translateX(-10px); }
+                    40% { transform: translateX(10px); }
+                    60% { transform: translateX(-10px); }
+                    80% { transform: translateX(10px); }
+                }
+                .shake {
+                    animation: shake 0.5s ease-in-out;
+                }
+            `;
+            document.head.appendChild(style);
+        });
+    </script>
+</body>
+</html>
